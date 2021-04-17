@@ -17,7 +17,7 @@ public class UIHandler : Singleton<UIHandler>
     [SerializeField]
     GameObject scoreSection;
     [SerializeField]
-    TextMeshProUGUI scoreGnomes, scoreBombs, score;
+    TextMeshProUGUI gnomesLeftText, bombsLeftText, destroyedObjectsCountText, inTimeText, scoreDestroyedObjectsText, scoreTimeText, scorebombsText, scoreGoblinsText, finalScoreText;
 
     private void Start()
     {
@@ -39,7 +39,7 @@ public class UIHandler : Singleton<UIHandler>
     {
         var bombs = GameObject.FindObjectsOfType<Bomb>();
 
-        ShowFinalScore(BombsAndGoblinsTracker.Instance.CollectedGoblins, BombsAndGoblinsTracker.Instance.TotalGoblins, bombs.Length, Score.Instance.Amount);
+        ShowFinalScore(BombsAndGoblinsTracker.Instance.CollectedGoblins, BombsAndGoblinsTracker.Instance.TotalGoblins, bombs.Length, BombsAndGoblinsTracker.Instance.TotalDestroyedObjects);
     }
 
 
@@ -80,12 +80,32 @@ public class UIHandler : Singleton<UIHandler>
         }
     }
 
-    public void ShowFinalScore(int gnomesCollected, int gnomesMax, int bombsLeft, int scoreFinal)
+    public void ShowFinalScore(int gnomesCollected, int gnomesMax, int bombsLeft, int destroyedObjects)
     {
         scoreSection.SetActive(true);
-        scoreGnomes.text = gnomesCollected + " / " + gnomesMax + " Gnomes saved";
-        scoreBombs.text = bombsLeft + " bombs left";
-        score.text = scoreFinal.ToString();
+        gnomesLeftText.text = gnomesCollected + " / " + gnomesMax + " Gnomes saved";
+        bombsLeftText.text = bombsLeft + " bombs left";
+        destroyedObjectsCountText.text = $"Destroyed {destroyedObjects} objects";
+        inTimeText.text = $"in {(int)Time.timeSinceLevelLoad} seconds";
+        finalScoreText.text = Score.Instance.FinalScore.ToString();
+
+        SetText(scoreGoblinsText, Score.Instance.GoblinScore);
+        SetText(scoreTimeText, Score.Instance.TimeScore);
+        SetText(scorebombsText, Score.Instance.BombScore);
+        SetText(scoreDestroyedObjectsText, Score.Instance.DestroyedObjectScore);
+    }
+    private void SetText(TextMeshProUGUI textMesh, int score)
+    {
+        if (score < 0)
+        {
+            textMesh.color = Color.red;
+        }
+        else
+        {
+            textMesh.color = Color.white;
+        }
+
+        textMesh.text = score.ToString();
     }
 
     public void ReturnToMenue()

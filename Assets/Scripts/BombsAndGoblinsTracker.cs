@@ -10,6 +10,7 @@ public class BombsAndGoblinsTracker : Singleton<BombsAndGoblinsTracker>
     int goblinsCollected;
     int totalGoblins;
     int bombsLeft;
+    int destroyedObjects;
 
     public event System.Action CollectedAllGoblins;
     public event System.Action GoblinAdded;
@@ -17,12 +18,12 @@ public class BombsAndGoblinsTracker : Singleton<BombsAndGoblinsTracker>
 
     public int CollectedGoblins { get => Instance.goblinsCollected; }
     public int TotalGoblins { get => Instance.totalGoblins; }
+    public int TotalDestroyedObjects { get => Instance.destroyedObjects; }
 
     protected override void Awake()
     {
         base.Awake();
         totalGoblins = GameObject.FindObjectsOfType<Goblin>().Length;
-        bombsLeft = GameObject.FindObjectsOfType<Bomb>().Length;
         goblinsCollected = 0;
     }
 
@@ -34,7 +35,7 @@ public class BombsAndGoblinsTracker : Singleton<BombsAndGoblinsTracker>
         }
 
         Instance.goblinsCollected++;
-        Score.Instance.Add(Instance.scorePerGoblin);
+        Score.Instance.Add(Instance.scorePerGoblin, ScoreType.Goblin);
 
         GoblinAdded?.Invoke();
 
@@ -44,6 +45,10 @@ public class BombsAndGoblinsTracker : Singleton<BombsAndGoblinsTracker>
         }
 
     }
+    public void AddBomb()
+    {
+        bombsLeft++;
+    }
 
     public void RemoveBomb()
     {
@@ -52,6 +57,11 @@ public class BombsAndGoblinsTracker : Singleton<BombsAndGoblinsTracker>
         {
             OutOfBombs?.Invoke();
         }
+    }
+
+    public void AddDestroyedObject()
+    {
+        destroyedObjects++;
     }
 
 }

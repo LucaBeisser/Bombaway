@@ -20,3 +20,8 @@ public interface IClickable
 {
     void Click();
 }
+
+public interface IAffectable
+{
+    void OnActivate();
+}

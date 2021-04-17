@@ -19,7 +19,8 @@ public class Destructable : MonoBehaviour, IExplodingElement
             Instantiate(destructedVersion, transform.position, Quaternion.identity);
         }
 
-        Score.Instance.Add(scorePerExplode);
+        BombsAndGoblinsTracker.Instance.AddDestroyedObject();
+        Score.Instance.Add(scorePerExplode, ScoreType.DestroyedObject);
         Destroy(gameObject);
     }
 }

@@ -23,6 +23,8 @@ public class Bomb : MonoBehaviour, IExplodingElement, IPickupable
 
     private void Start()
     {
+        BombsAndGoblinsTracker.Instance.AddBomb();
+
         rigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         light2d = GetComponentInChildren<Light2D>();
@@ -51,6 +53,9 @@ public class Bomb : MonoBehaviour, IExplodingElement, IPickupable
         {
             return;
         }
+
+        if (animator == null) animator = GetComponent<Animator>();
+        if(light2d == null) light2d = GetComponentInChildren<Light2D>();
 
 
         Debug.Log("Bomb triggered");
@@ -92,7 +97,7 @@ public class Bomb : MonoBehaviour, IExplodingElement, IPickupable
         Instantiate(explosionPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
 
-        Score.Instance.Add(scorePerExplosion);
+        Score.Instance.Add(scorePerExplosion, ScoreType.Bomb);
 
         BombsAndGoblinsTracker.Instance.RemoveBomb();
     }
